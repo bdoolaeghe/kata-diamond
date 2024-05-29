@@ -12,8 +12,7 @@ public class Alphabet {
         if (!alphabet.contains(lastLetter)) {
             throw new IllegalArgumentException("Invalid last letter: " + lastLetter);
         }
-        var lastLetterIndex = alphabet.indexOf(lastLetter);
-        return alphabet.subList(0, lastLetterIndex +1 );
+        return alphabet.subList(0, alphabet.indexOf(lastLetter) + 1 );
     }
 
 }
