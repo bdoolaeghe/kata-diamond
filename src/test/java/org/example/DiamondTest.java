@@ -1,6 +1,5 @@
 package org.example;
 
-import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -25,6 +24,21 @@ class DiamondTest {
                 C   C
                  B B
                   A
+                """
+        );
+    }
+
+    @Test
+    void should_create_big_diamond_with_D() {
+        assertThat(Diamond.create('D')).isEqualTo(
+        """
+                   A
+                  B B
+                 C   C
+                D     D
+                 C   C
+                  B B
+                   A
                 """
         );
     }
