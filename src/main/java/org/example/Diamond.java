@@ -47,12 +47,18 @@ public class Diamond {
     }
 
     private String computeMultipleRowDiamond(List<Character> letters) {
-        fillDiamondSpikes(letters.getFirst(), rows);
-        fillDiamondInside(letters, rows);
-        return toView(rows);
+        fillDiamondSpikes(letters.getFirst());
+        fillDiamondInside(letters);
+        return toView();
     }
 
-    private void fillDiamondInside(List<Character> letters, Row[] rows) {
+    private void fillDiamondSpikes(Character letter) {
+        var spikeRow = new Row(letter, 0, cardinality);
+        rows[0] =  spikeRow;
+        rows[diamondHeight - 1 ] = spikeRow;
+    }
+
+    private void fillDiamondInside(List<Character> letters) {
         for (int rowIndex = 1; rowIndex < cardinality; rowIndex++) {
             var letter = letters.get(rowIndex);
             var innerRow = new Row(letter, rowIndex, cardinality);
@@ -61,14 +67,7 @@ public class Diamond {
         }
     }
 
-    private void fillDiamondSpikes(Character letter, Row[] rows) {
-        var spikeRow = new Row(letter, 0, cardinality);
-        rows[0] =  spikeRow;
-        rows[diamondHeight - 1 ] = spikeRow;
-    }
-
-
-    private static String toView(Row[] rows) {
+    private String toView() {
         return Stream.of(rows)
                 .map(row -> row + "\n")
                 .collect(joining());
