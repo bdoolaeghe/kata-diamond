@@ -11,39 +11,50 @@ public class Diamond {
 
     private static Alphabet alphabet = new Alphabet();
 
-    public static void main(String[] args) {
-        System.out.println(Diamond.create('C'));
+    private final char lastLetter;
+    private final List<Character> letters;
+    private final int cardinality;
+    private final int diamondHeight;
+    private final String[] rows;
+    private final String view;
+
+    public Diamond(char lastLetter) {
+        this.lastLetter = lastLetter;
+        this.letters =  alphabet.lettersUntil(lastLetter);
+        this.cardinality = letters.size();
+        this.diamondHeight = 2 * cardinality - 1;
+        this.rows = new String[diamondHeight];
+        this.view = computeDiamondView();
     }
 
-    public static String create(char lastLetter) {
-        var letters = alphabet.lettersUntil(lastLetter);
+    public static Diamond create(char lastLetter) {
+        return new Diamond(lastLetter);
+    }
 
+    @Override
+    public String toString() {
+        return view;
+    }
+
+    private String computeDiamondView() {
         if (letters.size() == 1) {
-            return createSingleRowDiamond(lastLetter);
+            return computeSingleRowDiamond(lastLetter);
         } else {
-            return createMultipleRowDiamond(letters);
+            return computeMultipleRowDiamond(letters);
         }
     }
 
-    private static String createSingleRowDiamond(Character letter) {
+    private String computeSingleRowDiamond(Character letter) {
         return letter.toString();
     }
 
-    private static String createMultipleRowDiamond(List<Character> letters) {
-        var cardinality = letters.size();
-        var diamondHeight = 2 * cardinality - 1;
-        var rows = new String[diamondHeight];
-
+    private String computeMultipleRowDiamond(List<Character> letters) {
         fillDiamondSpikes(letters.getFirst(), cardinality, rows);
         fillDiamondInside(letters, rows);
-
-        return format(rows);
+        return toView(rows);
     }
 
-    private static void fillDiamondInside(List<Character> letters, String[] rows) {
-        var cardinality = letters.size();
-        var diamondHeight = 2 * cardinality - 1;
-        
+    private void fillDiamondInside(List<Character> letters, String[] rows) {
         for (int rowIndex = 1; rowIndex < cardinality; rowIndex++) {
             var letter = letters.get(rowIndex);
             var innerRow = createInnerRow(letter, cardinality, rowIndex);
@@ -52,27 +63,20 @@ public class Diamond {
         }
     }
 
-    private static String createInnerRow(Character letter, int cardinality, int rowIndex) {
+    private String createInnerRow(Character letter, int cardinality, int rowIndex) {
         return leftPad(letter, cardinality - rowIndex) +
                spaces(2 * rowIndex - 1) +
                letter;
     }
 
-    private static void fillDiamondSpikes(Character letter, int leftPadding, String[] rows) {
-        var diamondHeight = 2 * leftPadding - 1;
+    private void fillDiamondSpikes(Character letter, int leftPadding, String[] rows) {
         var spikeRow = createSpikeRow(letter, leftPadding);
         rows[0] =  spikeRow;
         rows[diamondHeight - 1 ] = spikeRow;
     }
 
-    private static String createSpikeRow(Character letter, int leftPadding) {
+    private String createSpikeRow(Character letter, int leftPadding) {
         return leftPad(letter, leftPadding);
-    }
-
-    private static String format(String[] rows) {
-        return Stream.of(rows)
-                .map(row -> row + "\n")
-                .collect(joining());
     }
 
     private static String spaces(int i) {
@@ -81,6 +85,12 @@ public class Diamond {
 
     private static String leftPad(Character c, int length) {
         return StringUtils.leftPad(c.toString(), length);
+    }
+
+    private static String toView(String[] rows) {
+        return Stream.of(rows)
+                .map(row -> row + "\n")
+                .collect(joining());
     }
 
 }

@@ -9,12 +9,12 @@ class DiamondTest {
 
     @Test
     void should_create_single_char_diamond() {
-        assertThat(Diamond.create('A')).isEqualTo("A");
+        assertThat(Diamond.create('A').toString()).isEqualTo("A");
     }
 
     @Test
     void should_create_small_diamond_with_C() {
-        assertThat(Diamond.create('C')).isEqualTo(
+        assertThat(Diamond.create('C').toString()).isEqualTo(
         """
                   A
                  B B
@@ -27,7 +27,7 @@ class DiamondTest {
 
     @Test
     void should_create_big_diamond_with_D() {
-        assertThat(Diamond.create('D')).isEqualTo(
+        assertThat(Diamond.create('D').toString()).isEqualTo(
         """
                    A
                   B B
