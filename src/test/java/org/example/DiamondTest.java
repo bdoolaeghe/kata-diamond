@@ -9,7 +9,9 @@ class DiamondTest {
 
     @Test
     void should_create_single_char_diamond() {
-        assertThat(Diamond.create('A').toString()).isEqualTo("A");
+        assertThat(Diamond.create('A').toString()).isEqualTo("""
+                                                                      A
+                                                                      """);
     }
 
     @Test

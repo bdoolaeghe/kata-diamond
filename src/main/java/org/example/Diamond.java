@@ -13,7 +13,6 @@ public class Diamond {
     private final List<Character> letters;
     private final int cardinality;
     private final int diamondHeight;
-    private final Row[] rows;
     private final String view;
 
     public Diamond(char lastLetter) {
@@ -21,8 +20,7 @@ public class Diamond {
         this.letters =  alphabet.lettersUntil(lastLetter);
         this.cardinality = letters.size();
         this.diamondHeight = 2 * cardinality - 1;
-        this.rows = new Row[diamondHeight];
-        this.view = computeDiamondView();
+        this.view = toView(computeDiamondRows());
     }
 
     public static Diamond create(char lastLetter) {
@@ -34,40 +32,18 @@ public class Diamond {
         return view;
     }
 
-    private String computeDiamondView() {
-        if (lastLetter == 'A') {
-            return computeSingleRowDiamond(lastLetter);
-        } else {
-            return computeMultipleRowDiamond(letters);
-        }
-    }
-
-    private String computeSingleRowDiamond(Character letter) {
-        return letter.toString();
-    }
-
-    private String computeMultipleRowDiamond(List<Character> letters) {
-        fillDiamondSpikes(letters.getFirst());
-        fillDiamondInside(letters);
-        return toView();
-    }
-
-    private void fillDiamondSpikes(Character letter) {
-        var spikeRow = new Row(letter, 0, cardinality);
-        rows[0] =  spikeRow;
-        rows[diamondHeight - 1 ] = spikeRow;
-    }
-
-    private void fillDiamondInside(List<Character> letters) {
-        for (int rowIndex = 1; rowIndex < cardinality; rowIndex++) {
+    private Row[] computeDiamondRows() {
+        var rows = new Row[diamondHeight];
+        for (int rowIndex = 0; rowIndex < cardinality; rowIndex++) {
             var letter = letters.get(rowIndex);
-            var innerRow = new Row(letter, rowIndex, cardinality);
-            rows[rowIndex] = innerRow;
-            rows[diamondHeight - (rowIndex + 1)] = innerRow;
+            var row = new Row(letter, rowIndex, cardinality);
+            rows[rowIndex] = row;
+            rows[diamondHeight - (rowIndex + 1)] = row;
         }
+        return rows;
     }
 
-    private String toView() {
+    private static String toView(Row[] rows) {
         return Stream.of(rows)
                 .map(row -> row + "\n")
                 .collect(joining());
