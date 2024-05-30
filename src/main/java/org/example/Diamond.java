@@ -1,7 +1,5 @@
 package org.example;
 
-import org.apache.commons.lang3.StringUtils;
-
 import java.util.List;
 import java.util.stream.Stream;
 
@@ -15,7 +13,7 @@ public class Diamond {
     private final List<Character> letters;
     private final int cardinality;
     private final int diamondHeight;
-    private final String[] rows;
+    private final Row[] rows;
     private final String view;
 
     public Diamond(char lastLetter) {
@@ -23,7 +21,7 @@ public class Diamond {
         this.letters =  alphabet.lettersUntil(lastLetter);
         this.cardinality = letters.size();
         this.diamondHeight = 2 * cardinality - 1;
-        this.rows = new String[diamondHeight];
+        this.rows = new Row[diamondHeight];
         this.view = computeDiamondView();
     }
 
@@ -37,7 +35,7 @@ public class Diamond {
     }
 
     private String computeDiamondView() {
-        if (letters.size() == 1) {
+        if (lastLetter == 'A') {
             return computeSingleRowDiamond(lastLetter);
         } else {
             return computeMultipleRowDiamond(letters);
@@ -49,45 +47,28 @@ public class Diamond {
     }
 
     private String computeMultipleRowDiamond(List<Character> letters) {
-        fillDiamondSpikes(letters.getFirst(), cardinality, rows);
+        fillDiamondSpikes(letters.getFirst(), rows);
         fillDiamondInside(letters, rows);
         return toView(rows);
     }
 
-    private void fillDiamondInside(List<Character> letters, String[] rows) {
+    private void fillDiamondInside(List<Character> letters, Row[] rows) {
         for (int rowIndex = 1; rowIndex < cardinality; rowIndex++) {
             var letter = letters.get(rowIndex);
-            var innerRow = createInnerRow(letter, cardinality, rowIndex);
+            var innerRow = new Row(letter, rowIndex, cardinality);
             rows[rowIndex] = innerRow;
             rows[diamondHeight - (rowIndex + 1)] = innerRow;
         }
     }
 
-    private String createInnerRow(Character letter, int cardinality, int rowIndex) {
-        return leftPad(letter, cardinality - rowIndex) +
-               spaces(2 * rowIndex - 1) +
-               letter;
-    }
-
-    private void fillDiamondSpikes(Character letter, int leftPadding, String[] rows) {
-        var spikeRow = createSpikeRow(letter, leftPadding);
+    private void fillDiamondSpikes(Character letter, Row[] rows) {
+        var spikeRow = new Row(letter, 0, cardinality);
         rows[0] =  spikeRow;
         rows[diamondHeight - 1 ] = spikeRow;
     }
 
-    private String createSpikeRow(Character letter, int leftPadding) {
-        return leftPad(letter, leftPadding);
-    }
 
-    private static String spaces(int i) {
-        return " ".repeat(i);
-    }
-
-    private static String leftPad(Character c, int length) {
-        return StringUtils.leftPad(c.toString(), length);
-    }
-
-    private static String toView(String[] rows) {
+    private static String toView(Row[] rows) {
         return Stream.of(rows)
                 .map(row -> row + "\n")
                 .collect(joining());
