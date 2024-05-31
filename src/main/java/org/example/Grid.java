@@ -47,4 +47,8 @@ public class Grid {
                 y >= minY);
     }
 
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 }
