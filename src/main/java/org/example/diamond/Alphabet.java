@@ -1,4 +1,4 @@
-package org.example;
+package org.example.diamond;
 
 import java.util.List;
 
