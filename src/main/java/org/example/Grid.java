@@ -56,4 +56,12 @@ public class Grid {
         }
         return gridBuffer.toString();
     }
+
+    public Grid mirrorRightToLeft() {
+        throw new RuntimeException("implement me !");
+    }
+
+    public Grid mirrorTopToBottom() {
+        throw new RuntimeException("implement me !");
+    }
 }

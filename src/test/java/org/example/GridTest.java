@@ -51,4 +51,44 @@ class GridTest {
         }
     }
 
+    @Nested
+    class Mirroring {
+
+        @Test
+        void should_mirror_right_to_left() {
+            var grid = new Grid(1, 1);
+            grid.set(0, 1, "A");
+            grid.set(1, 0, "B");
+
+            grid.mirrorRightToLeft();
+
+            assertThat(grid.toString()).isEqualTo(
+                    """
+                             A
+                            B B
+                            
+                            """
+            );
+        }
+
+        @Test
+        void should_mirror_top_to_bottom() {
+            var grid = new Grid(1, 1);
+            grid.set(0, 1, "A");
+            grid.set(-1, 0, "B");
+            grid.set(1, 0, "B");
+
+            grid.mirrorTopToBottom();
+
+            assertThat(grid.toString()).isEqualTo(
+                    """
+                             A
+                            B B
+                             A
+                            """
+            );
+        }
+
+    }
+
 }
