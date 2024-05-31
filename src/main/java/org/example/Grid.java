@@ -3,6 +3,7 @@ package org.example;
 import com.google.common.collect.ArrayTable;
 import com.google.common.collect.Table;
 
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import static java.util.stream.Collectors.toList;
@@ -15,8 +16,12 @@ public class Grid {
     private final int minY;
     private final int maxY;
 
+    public Grid(int maxXAndY) {
+        this(maxXAndY, maxXAndY);
+    }
+
     public Grid(int maxX, int maxY) {
-        if (maxX <= 0 || maxY <= 0)
+        if (maxX < 0 || maxY < 0)
             throw new IllegalArgumentException("invalid grid dimensions");
         this.minX = -maxX;
         this.maxX = maxX;
@@ -29,9 +34,6 @@ public class Grid {
     }
 
     public Grid set(int x, int y, String value) {
-        if (!contains(x, y)) {
-            throw new IllegalArgumentException(String.format("coordinates out of grid: (%d, %d)", x, y));
-        }
         table.put(y, x, value);
         return this;
     }
@@ -40,15 +42,18 @@ public class Grid {
         return table.get(y, x);
     }
 
-    private boolean contains(int x, int y) {
-        return (x <= maxX &&
-                x >= minX &&
-                y <= maxY &&
-                y >= minY);
-    }
-
     @Override
     public String toString() {
-        return super.toString();
+        var gridBuffer = new StringBuilder();
+        for (int y = maxY; y >= minY; y--) {
+            var rowBuffer = new StringBuilder();
+            for (int x = minX; x <= maxX; x++) {
+                var value = get(x, y);
+                rowBuffer.append(Optional.ofNullable(value).orElse(" "));
+            }
+            gridBuffer.append(rowBuffer.toString().stripTrailing());
+            gridBuffer.append("\n");
+        }
+        return gridBuffer.toString();
     }
 }
