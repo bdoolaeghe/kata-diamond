@@ -57,11 +57,21 @@ public class Grid {
         return gridBuffer.toString();
     }
 
-    public Grid mirrorRightToLeft() {
-        throw new RuntimeException("implement me !");
+    public void mirrorRightToLeft() {
+        for (int y = minY; y <= maxY; y++) {
+            for (int x = maxX; x >= 0; x--) {
+                var value = get(x, y);
+                set(-x, y, value);
+            }
+        }
     }
 
-    public Grid mirrorTopToBottom() {
-        throw new RuntimeException("implement me !");
+    public void mirrorTopToBottom() {
+        for (int y = maxY; y >= 0; y--) {
+            for (int x = minX; x <= maxX; x++) {
+                var value = get(x, y);
+                set(x, -y, value);
+            }
+        }
     }
 }
